@@ -2,7 +2,6 @@ package rest
 
 import (
 	d "blogbe/delivery"
-	"blogbe/model"
 	"blogbe/service"
 	"errors"
 	"net/http"
@@ -23,7 +22,6 @@ func New(_svc *service.Svc) *Rest {
 // Register ...
 func (r *Rest) Register(g *gin.RouterGroup) {
 	g.GET("/profile", d.MustAuthorize(), r.GetUser)
-	g.POST("/auth/signup", d.MustAuthorize(), r.PostUser)
 
 }
 
@@ -52,25 +50,3 @@ func (r *Rest) GetUser(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, users)
 }*/
-
-func (r *Rest) PostUser(c *gin.Context) {
-	var req model.User
-	c.BindJSON(&req)
-	err := r.Svc.InsertUser(c, &req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	c.JSON(http.StatusOK, "OK")
-}
-
-func (r *Rest) CheckUsernamePassword(c *gin.Context) {
-	var req service.UserPasswordCheckRequest
-	c.BindJSON(&req)
-	res, err := r.Svc.CheckUsernamePassword(c, &req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
-	}
-	c.JSON(http.StatusOK, res)
-}

@@ -1,18 +1,17 @@
 package authRest
 
 import (
-	"blogbe/auth"
 	d "blogbe/delivery"
-	"blogbe/helper"
 	"blogbe/model"
 	"blogbe/service"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	ginserver "github.com/go-oauth2/gin-server"
 )
 
-// Rest ...
+// AuthRest ...
 type AuthRest struct {
 	Svc *service.Svc
 }
@@ -26,11 +25,12 @@ func New(_svc *service.Svc) *AuthRest {
 func (r *AuthRest) Register(g *gin.RouterGroup) {
 	g.POST("/login", r.Login)
 	g.GET("/tokeninfo", d.MustAuthorize(), r.GetTokenInfo)
+	g.POST("/signup", d.MustAuthorize(), r.SignUp)
 }
 
 // GetTokenInfo ..
 func (r *AuthRest) GetTokenInfo(c *gin.Context) {
-	ti, exists := auth.GetTokenInfo(c)
+	ti, exists := c.Get(ginserver.DefaultConfig.TokenKey)
 	if exists {
 		c.JSON(http.StatusOK, ti)
 		return
@@ -42,29 +42,29 @@ func (r *AuthRest) GetTokenInfo(c *gin.Context) {
 func (r *AuthRest) Login(c *gin.Context) {
 	var req model.User
 	c.BindJSON(&req)
-	res, err := r.Svc.CheckUsernamePassword(c, &service.UserPasswordCheckRequest{
+
+	err := r.Svc.GetAccessToken(c, &service.GetAccessTokenRequest{
 		Username: req.Username,
 		Password: req.Password,
 	})
 
-	if res == nil && err != nil {
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	log.Println(err)
-	if *res == false {
-		c.JSON(http.StatusBadRequest, "Invalid password")
+	return
+}
+
+// SignUp ..
+func (r *AuthRest) SignUp(c *gin.Context) {
+	var req model.User
+	c.BindJSON(&req)
+	err := r.Svc.InsertUser(c, &req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.Request.ParseForm()
-	c.Request.Form.Add("client_id", helper.GetEnv("AUTH_CLIENT_ID"))
-	c.Request.Form.Add("client_secret", helper.GetEnv("AUTH_SECRET"))
-	c.Request.Form.Add("scope", "read")
-	c.Request.Form.Add("grant_type", "password")
-	c.Request.Form.Add("username", req.Username)
-	c.Request.Form.Add("password", req.Password)
-
-	auth.GetAccessToken(c)
+	c.JSON(http.StatusOK, "OK")
 }

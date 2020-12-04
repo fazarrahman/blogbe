@@ -19,7 +19,8 @@ func New(_userRepo userRepository.Repository) *Svc {
 
 // Service ...
 type Service interface {
+	GetAccessToken(c *gin.Context)
 	GetUser(c *gin.Context, username string) (*model.User, error)
 	InsertUser(c *gin.Context, r *model.User) error
-	CheckUsernamePassword(c *gin.Context, r *UserPasswordCheckRequest) (*bool, error)
+	CheckUsernamePassword(ctx *gin.Context, r *UserPasswordCheckRequest) (*bool, error)
 }

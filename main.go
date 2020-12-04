@@ -31,7 +31,7 @@ func main() {
 
 	g := gin.Default()
 	delivery_rest.New(svc).Register(g.Group("/api"))
-	auth_rest.New(svc).Register(g.Group("/auth"))
+	auth_rest.New(svc).Register(g.Group("/api/auth"))
 
 	g.Run(helper.GetEnv("APP_PORT"))
 }

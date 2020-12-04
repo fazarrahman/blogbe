@@ -13,12 +13,6 @@ import (
 	validate "gopkg.in/go-playground/validator.v9"
 )
 
-// UserPasswordCheckRequest ...
-type UserPasswordCheckRequest struct {
-	Username string `validate:"required,min=1"`
-	Password string `validate:"required,min=1"`
-}
-
 // GetUser ...
 func (s *Svc) GetUser(c *gin.Context, username string) (*model.User, error) {
 	userEntity, err := s.UserRepository.GetUser(c, username)
@@ -74,22 +68,4 @@ func (s *Svc) InsertUser(ctx *gin.Context, r *model.User) error {
 	}
 
 	return nil
-}
-
-func (s *Svc) CheckUsernamePassword(ctx *gin.Context, r *UserPasswordCheckRequest) (*bool, error) {
-	userEntity, err := s.UserRepository.GetUser(ctx, r.Username)
-	var res bool
-	if userEntity == nil && err == nil {
-		return nil, errors.New("No data")
-	} else if err != nil {
-		return nil, err
-	}
-
-	err = bcrypt.CompareHashAndPassword(userEntity.Password, []byte(r.Password))
-	if err != nil {
-		res = false
-		return &res, err
-	}
-	res = true
-	return &res, nil
 }

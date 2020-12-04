@@ -3,7 +3,6 @@ package auth
 import (
 	"blogbe/helper"
 
-	"github.com/gin-gonic/gin"
 	ginserver "github.com/go-oauth2/gin-server"
 	"gopkg.in/oauth2.v3/manage"
 	"gopkg.in/oauth2.v3/models"
@@ -31,16 +30,4 @@ func Init() {
 	ginserver.InitServer(manager)
 	ginserver.SetAllowGetAccessRequest(true)
 	ginserver.SetClientInfoHandler(server.ClientFormHandler)
-}
-
-func GetAccessToken(c *gin.Context) {
-	ginserver.SetPasswordAuthorizationHandler(func(username, password string) (userID string, err error) {
-		return username, nil
-	})
-	ginserver.HandleTokenRequest(c)
-}
-
-func GetTokenInfo(c *gin.Context) (interface{}, bool) {
-	return c.Get(ginserver.DefaultConfig.TokenKey)
-
 }
