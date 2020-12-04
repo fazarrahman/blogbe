@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"log"
+	"blogbe/helper"
 
 	"github.com/gin-gonic/gin"
 	ginserver "github.com/go-oauth2/gin-server"
@@ -19,10 +19,10 @@ func Init() {
 
 	// client store
 	clientStore := store.NewClientStore()
-	clientStore.Set("000000", &models.Client{
-		ID:     "000000",
-		Secret: "999999",
-		Domain: "http://localhost",
+	clientStore.Set(helper.GetEnv("AUTH_CLIENT_ID"), &models.Client{
+		ID:     helper.GetEnv("AUTH_CLIENT_ID"),
+		Secret: helper.GetEnv("AUTH_SECRET"),
+		Domain: helper.GetEnv("APP_DOMAIN"),
 	})
 	manager.MapClientStorage(clientStore)
 	manager.SetRefreshTokenCfg(manage.DefaultRefreshTokenCfg)
@@ -31,13 +31,11 @@ func Init() {
 	ginserver.InitServer(manager)
 	ginserver.SetAllowGetAccessRequest(true)
 	ginserver.SetClientInfoHandler(server.ClientFormHandler)
-
-	log.Println("Oauth has been initialized")
 }
 
 func GetAccessToken(c *gin.Context) {
 	ginserver.SetPasswordAuthorizationHandler(func(username, password string) (userID string, err error) {
-		return "theUserId", nil
+		return username, nil
 	})
 	ginserver.HandleTokenRequest(c)
 }
