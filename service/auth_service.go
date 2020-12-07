@@ -1,8 +1,9 @@
 package service
 
 import (
+	errorlib "blogbe/error"
 	"blogbe/helper"
-	"errors"
+
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +24,7 @@ type UserPasswordCheckRequest struct {
 }
 
 // GetAccessToken ..
-func (s *Svc) GetAccessToken(c *gin.Context, req *GetAccessTokenRequest) error {
+func (s *Svc) GetAccessToken(c *gin.Context, req *GetAccessTokenRequest) *errorlib.Error {
 	res, err := s.CheckUsernamePassword(c, &UserPasswordCheckRequest{
 		Username: req.Username,
 		Password: req.Password,
@@ -34,7 +35,7 @@ func (s *Svc) GetAccessToken(c *gin.Context, req *GetAccessTokenRequest) error {
 	}
 
 	if *res == false {
-		return errors.New("Invalid password")
+		return errorlib.BadRequest("Invalid password")
 	}
 
 	c.Request.ParseForm()
@@ -46,7 +47,7 @@ func (s *Svc) GetAccessToken(c *gin.Context, req *GetAccessTokenRequest) error {
 	c.Request.Form.Add("password", req.Password)
 
 	ginserver.SetPasswordAuthorizationHandler(func(username, password string) (userID string, err error) {
-		us, err := s.UserRepository.GetUser(c, username)
+		us, err := s.UserRepository.GetUser(c, "username", username)
 		if err != nil {
 			log.Println(err)
 			return "", err
@@ -60,19 +61,19 @@ func (s *Svc) GetAccessToken(c *gin.Context, req *GetAccessTokenRequest) error {
 }
 
 // CheckUsernamePassword ..
-func (s *Svc) CheckUsernamePassword(ctx *gin.Context, r *UserPasswordCheckRequest) (*bool, error) {
-	userEntity, err := s.UserRepository.GetUser(ctx, r.Username)
+func (s *Svc) CheckUsernamePassword(ctx *gin.Context, r *UserPasswordCheckRequest) (*bool, *errorlib.Error) {
+	userEntity, err := s.UserRepository.GetUser(ctx, "username", r.Username)
 	var res bool
 	if userEntity == nil && err == nil {
-		return nil, errors.New("No data")
+		return nil, errorlib.NotFound("No user data found")
 	} else if err != nil {
-		return nil, err
+		return nil, errorlib.InternalServerError(err.Error())
 	}
 
 	err = bcrypt.CompareHashAndPassword(userEntity.Password, []byte(r.Password))
 	if err != nil {
 		res = false
-		return &res, err
+		return &res, errorlib.InternalServerError(err.Error())
 	}
 	res = true
 	return &res, nil

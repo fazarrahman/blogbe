@@ -49,7 +49,7 @@ func (r *AuthRest) Login(c *gin.Context) {
 	})
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(err.StatusCode, err)
 		return
 	}
 
@@ -62,7 +62,7 @@ func (r *AuthRest) SignUp(c *gin.Context) {
 	c.BindJSON(&req)
 	err := r.Svc.InsertUser(c, &req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(err.StatusCode, err)
 		return
 	}
 

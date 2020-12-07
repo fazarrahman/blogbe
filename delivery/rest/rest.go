@@ -2,8 +2,9 @@ package rest
 
 import (
 	d "blogbe/delivery"
+	"blogbe/error"
 	"blogbe/service"
-	"errors"
+
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,13 +31,13 @@ func (r *Rest) GetUser(c *gin.Context) {
 	qry := c.Request.URL.Query()
 
 	if qry.Get("username") == "" {
-		c.JSON(http.StatusBadRequest, errors.New("Username is required"))
+		c.JSON(http.StatusBadRequest, error.BadRequest("Username is required"))
 		return
 	}
 
 	u, err := r.Svc.GetUser(c, qry.Get("username"))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		c.JSON(err.StatusCode, err)
 		return
 	}
 

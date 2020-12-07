@@ -2,8 +2,8 @@ package service
 
 import (
 	ue "blogbe/domain/user/entity"
+	"blogbe/error"
 	"blogbe/model"
-	"errors"
 	"log"
 	"time"
 
@@ -14,12 +14,12 @@ import (
 )
 
 // GetUser ...
-func (s *Svc) GetUser(c *gin.Context, username string) (*model.User, error) {
-	userEntity, err := s.UserRepository.GetUser(c, username)
+func (s *Svc) GetUser(c *gin.Context, username string) (*model.User, *error.Error) {
+	userEntity, err := s.UserRepository.GetUser(c, "username", username)
 	if userEntity == nil && err == nil {
-		return nil, errors.New("No data")
+		return nil, error.NotFound("User not found")
 	} else if err != nil {
-		return nil, err
+		return nil, error.InternalServerError(err.Error())
 	}
 
 	var res model.User
@@ -35,25 +35,38 @@ func (s *Svc) GetUser(c *gin.Context, username string) (*model.User, error) {
 	return users, nil
 }*/
 
-func (s *Svc) InsertUser(ctx *gin.Context, r *model.User) error {
+// InsertUser ..
+func (s *Svc) InsertUser(ctx *gin.Context, r *model.User) *error.Error {
 	errs := validate.New().Struct(r)
 	if errs != nil {
 		log.Println(errs)
-		return errors.New("Bad Request")
+		return error.BadRequest(errs.Error())
 	}
 
 	pwdhash, err := bcrypt.GenerateFromPassword([]byte(r.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return err
+		log.Println(err)
+		return error.InternalServerError(err.Error())
 	}
 
-	// validate usernqme
-	us, err := s.UserRepository.GetUser(ctx, r.Username)
+	// validate username
+	us, err := s.UserRepository.GetUser(ctx, "username", r.Username)
 	if err != nil {
-		return err
+		log.Println(err)
+		return error.InternalServerError(err.Error())
 	}
 	if us != nil {
-		return errors.New("Username already exists")
+		return error.ResourceAlreadyExist("Username already exists")
+	}
+
+	// validate email
+	eEmail, err := s.UserRepository.GetUser(ctx, "email", r.Email)
+	if err != nil {
+		log.Println(err)
+		return error.InternalServerError(err.Error())
+	}
+	if eEmail != nil {
+		return error.ResourceAlreadyExist("Email is already registered")
 	}
 
 	var u ue.User
@@ -64,7 +77,8 @@ func (s *Svc) InsertUser(ctx *gin.Context, r *model.User) error {
 	err = s.UserRepository.InsertUser(ctx, &u)
 
 	if err != nil {
-		return err
+		log.Println(err)
+		return error.InternalServerError(err.Error())
 	}
 
 	return nil

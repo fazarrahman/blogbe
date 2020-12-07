@@ -39,8 +39,8 @@ func (m *Mongodb) GetUsers(ctx context.Context, filter bson.M) ([]*ue.User, erro
 	return users, nil
 }
 
-func (m *Mongodb) GetUser(ctx context.Context, username string) (*ue.User, error) {
-	res := m.usersCollection.FindOne(ctx, bson.M{"username": username})
+func (m *Mongodb) GetUser(ctx context.Context, fieldName string, value interface{}) (*ue.User, error) {
+	res := m.usersCollection.FindOne(ctx, bson.M{fieldName: value})
 	var user ue.User
 	err := res.Decode(&user)
 	if err != nil && err != mongo.ErrNoDocuments {

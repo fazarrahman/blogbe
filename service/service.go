@@ -2,6 +2,7 @@ package service
 
 import (
 	userRepository "blogbe/domain/user/repository"
+	"blogbe/error"
 	"blogbe/model"
 
 	"github.com/gin-gonic/gin"
@@ -19,8 +20,8 @@ func New(_userRepo userRepository.Repository) *Svc {
 
 // Service ...
 type Service interface {
-	GetAccessToken(c *gin.Context)
-	GetUser(c *gin.Context, username string) (*model.User, error)
-	InsertUser(c *gin.Context, r *model.User) error
-	CheckUsernamePassword(ctx *gin.Context, r *UserPasswordCheckRequest) (*bool, error)
+	GetAccessToken(c *gin.Context) *error.Error
+	GetUser(c *gin.Context, username string) (*model.User, *error.Error)
+	InsertUser(c *gin.Context, r *model.User) *error.Error
+	CheckUsernamePassword(ctx *gin.Context, r *UserPasswordCheckRequest) (*bool, *error.Error)
 }
