@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"blogbe/helper"
+	"blogbe/lib"
 
 	ginserver "github.com/go-oauth2/gin-server"
 	"gopkg.in/oauth2.v3/manage"
@@ -18,10 +18,10 @@ func Init() {
 
 	// client store
 	clientStore := store.NewClientStore()
-	clientStore.Set(helper.GetEnv("AUTH_CLIENT_ID"), &models.Client{
-		ID:     helper.GetEnv("AUTH_CLIENT_ID"),
-		Secret: helper.GetEnv("AUTH_SECRET"),
-		Domain: helper.GetEnv("APP_DOMAIN"),
+	clientStore.Set(lib.GetEnv("AUTH_CLIENT_ID"), &models.Client{
+		ID:     lib.GetEnv("AUTH_CLIENT_ID"),
+		Secret: lib.GetEnv("AUTH_SECRET"),
+		Domain: lib.GetEnv("APP_DOMAIN"),
 	})
 	manager.MapClientStorage(clientStore)
 	manager.SetRefreshTokenCfg(manage.DefaultRefreshTokenCfg)

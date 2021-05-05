@@ -2,7 +2,7 @@ package service
 
 import (
 	errorlib "blogbe/error"
-	"blogbe/helper"
+	"blogbe/lib"
 
 	"log"
 
@@ -39,8 +39,8 @@ func (s *Svc) GetAccessToken(c *gin.Context, req *GetAccessTokenRequest) *errorl
 	}
 
 	c.Request.ParseForm()
-	c.Request.Form.Add("client_id", helper.GetEnv("AUTH_CLIENT_ID"))
-	c.Request.Form.Add("client_secret", helper.GetEnv("AUTH_SECRET"))
+	c.Request.Form.Add("client_id", lib.GetEnv("AUTH_CLIENT_ID"))
+	c.Request.Form.Add("client_secret", lib.GetEnv("AUTH_SECRET"))
 	c.Request.Form.Add("scope", "read")
 	c.Request.Form.Add("grant_type", "password")
 	c.Request.Form.Add("username", req.Username)

@@ -13,9 +13,9 @@ import (
 	validate "gopkg.in/go-playground/validator.v9"
 )
 
-// GetUser ...
-func (s *Svc) GetUser(c *gin.Context, username string) (*model.User, *error.Error) {
-	userEntity, err := s.UserRepository.GetUser(c, "username", username)
+// GetUserByID ...
+func (s *Svc) GetUserByID(c *gin.Context, id string) (*model.User, *error.Error) {
+	userEntity, err := s.UserRepository.GetUser(c, "_id", id)
 	if userEntity == nil && err == nil {
 		return nil, error.NotFound("User not found")
 	} else if err != nil {

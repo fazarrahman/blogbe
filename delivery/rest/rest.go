@@ -2,7 +2,7 @@ package rest
 
 import (
 	d "blogbe/delivery"
-	"blogbe/error"
+	"blogbe/lib"
 	"blogbe/service"
 
 	"net/http"
@@ -28,14 +28,12 @@ func (r *Rest) Register(g *gin.RouterGroup) {
 
 // GetUser ...
 func (r *Rest) GetUser(c *gin.Context) {
-	qry := c.Request.URL.Query()
-
-	if qry.Get("username") == "" {
-		c.JSON(http.StatusBadRequest, error.BadRequest("Username is required"))
-		return
+	uid := lib.GetUserIDFromToken(c)
+	if uid == nil {
+		c.JSON(http.StatusForbidden, "Invalid Token")
 	}
 
-	u, err := r.Svc.GetUser(c, qry.Get("username"))
+	u, err := r.Svc.GetUserByID(c, *uid)
 	if err != nil {
 		c.JSON(err.StatusCode, err)
 		return

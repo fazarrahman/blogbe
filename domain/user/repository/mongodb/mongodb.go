@@ -3,8 +3,11 @@ package mongodb
 import (
 	ue "blogbe/domain/user/entity"
 	"context"
+	"fmt"
+	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -40,7 +43,16 @@ func (m *Mongodb) GetUsers(ctx context.Context, filter bson.M) ([]*ue.User, erro
 }
 
 func (m *Mongodb) GetUser(ctx context.Context, fieldName string, value interface{}) (*ue.User, error) {
-	res := m.usersCollection.FindOne(ctx, bson.M{fieldName: value})
+	var res *mongo.SingleResult
+	if fieldName == "_id" {
+		objectId, err := primitive.ObjectIDFromHex(fmt.Sprintf("%v", value))
+		if err != nil {
+			log.Println("Invalid id")
+		}
+		res = m.usersCollection.FindOne(ctx, bson.M{fieldName: objectId})
+	} else {
+		res = m.usersCollection.FindOne(ctx, bson.M{fieldName: value})
+	}
 	var user ue.User
 	err := res.Decode(&user)
 	if err != nil && err != mongo.ErrNoDocuments {

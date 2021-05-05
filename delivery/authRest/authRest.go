@@ -25,7 +25,7 @@ func New(_svc *service.Svc) *AuthRest {
 func (r *AuthRest) Register(g *gin.RouterGroup) {
 	g.POST("/login", r.Login)
 	g.GET("/tokeninfo", d.MustAuthorize(), r.GetTokenInfo)
-	g.POST("/signup", d.MustAuthorize(), r.SignUp)
+	g.POST("/signup", r.SignUp)
 }
 
 // GetTokenInfo ..
