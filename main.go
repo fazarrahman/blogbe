@@ -1,14 +1,15 @@
 package main
 
 import (
-	"blogbe/auth"
-	dbcfg "blogbe/config/mongodb"
-	auth_rest "blogbe/delivery/authRest"
-	delivery_rest "blogbe/delivery/rest"
-	user_db_repo "blogbe/domain/user/repository/mongodb"
-	"blogbe/lib"
-	"blogbe/service"
 	"log"
+
+	"github.com/fazarrahman/blogbe/auth"
+	dbcfg "github.com/fazarrahman/blogbe/config/mongodb"
+	auth_rest "github.com/fazarrahman/blogbe/delivery/authRest"
+	delivery_rest "github.com/fazarrahman/blogbe/delivery/rest"
+	user_db_repo "github.com/fazarrahman/blogbe/domain/user/repository/mongodb"
+	"github.com/fazarrahman/blogbe/lib"
+	"github.com/fazarrahman/blogbe/service"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"

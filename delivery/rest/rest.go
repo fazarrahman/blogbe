@@ -1,9 +1,9 @@
 package rest
 
 import (
-	d "blogbe/delivery"
-	"blogbe/lib"
-	"blogbe/service"
+	d "github.com/fazarrahman/blogbe/delivery"
+	"github.com/fazarrahman/blogbe/lib"
+	"github.com/fazarrahman/blogbe/service"
 
 	"net/http"
 

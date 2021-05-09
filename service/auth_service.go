@@ -1,8 +1,8 @@
 package service
 
 import (
-	errorlib "blogbe/error"
-	"blogbe/lib"
+	errorlib "github.com/fazarrahman/blogbe/error"
+	"github.com/fazarrahman/blogbe/lib"
 
 	"log"
 

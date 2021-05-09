@@ -1,9 +1,9 @@
 package service
 
 import (
-	userRepository "blogbe/domain/user/repository"
-	"blogbe/error"
-	"blogbe/model"
+	userRepository "github.com/fazarrahman/blogbe/domain/user/repository"
+	"github.com/fazarrahman/blogbe/error"
+	"github.com/fazarrahman/blogbe/model"
 
 	"github.com/gin-gonic/gin"
 )

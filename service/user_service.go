@@ -1,11 +1,12 @@
 package service
 
 import (
-	ue "blogbe/domain/user/entity"
-	"blogbe/error"
-	"blogbe/model"
 	"log"
 	"time"
+
+	ue "github.com/fazarrahman/blogbe/domain/user/entity"
+	"github.com/fazarrahman/blogbe/error"
+	"github.com/fazarrahman/blogbe/model"
 
 	"github.com/gin-gonic/gin"
 	"github.com/ulule/deepcopier"

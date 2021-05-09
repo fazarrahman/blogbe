@@ -1,11 +1,12 @@
 package authRest
 
 import (
-	d "blogbe/delivery"
-	"blogbe/model"
-	"blogbe/service"
 	"log"
 	"net/http"
+
+	d "github.com/fazarrahman/blogbe/delivery"
+	"github.com/fazarrahman/blogbe/model"
+	"github.com/fazarrahman/blogbe/service"
 
 	"github.com/gin-gonic/gin"
 	ginserver "github.com/go-oauth2/gin-server"

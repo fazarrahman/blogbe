@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"blogbe/lib"
+	"github.com/fazarrahman/blogbe/lib"
 
 	ginserver "github.com/go-oauth2/gin-server"
 	"gopkg.in/oauth2.v3/manage"

@@ -1,8 +1,9 @@
 package repository
 
 import (
-	ue "blogbe/domain/user/entity"
 	"context"
+
+	ue "github.com/fazarrahman/blogbe/domain/user/entity"
 
 	"go.mongodb.org/mongo-driver/bson"
 )

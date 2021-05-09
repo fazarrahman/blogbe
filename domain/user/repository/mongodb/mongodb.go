@@ -1,10 +1,11 @@
 package mongodb
 
 import (
-	ue "blogbe/domain/user/entity"
 	"context"
 	"fmt"
 	"log"
+
+	ue "github.com/fazarrahman/blogbe/domain/user/entity"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
