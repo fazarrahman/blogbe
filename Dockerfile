@@ -1,15 +1,33 @@
-FROM golang:1.15.7-alpine
-RUN mkdir /go/blogbe
-## We copy everything in the root directory
-## into our /app directory
-ADD . /go/blogbe
-## We specify that we now wish to execute 
-## any further commands inside our /app
-## directory
-ENV APP_HOME /go/blogbe
-WORKDIR $APP_HOME
-## we run go build to compile the binary
-## executable of our Go program
-RUN go build -o main 
+FROM golang:1.15.7 as builder
+# Set the Current Working Directory inside the container
+WORKDIR /app
+
+# Copy go mod and sum files
+COPY go.mod go.sum ./
+
+# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+RUN go mod download
+
+# Copy the source from the current directory to the Working Directory inside the container
+COPY . .
+
+# Build the Go app
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+
+######## Start a new stage from scratch #######
+FROM alpine:latest
+
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /blogbe/
+
+# Copy the Pre-built binary file from the previous stage
+COPY --from=builder /app/main .
+COPY --from=builder /app/.env .   
+
+RUN chmod +x ./main
+
 EXPOSE 4000
-CMD ["/go/blogbe/main"]
+
+# Command to run the executable
+CMD ["./main"]
