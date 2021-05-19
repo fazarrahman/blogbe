@@ -1,3 +1,4 @@
+#!/bin/bash
 FROM golang:1.15.7 as builder
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -12,14 +13,14 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o main .
 
 ######## Start a new stage from scratch #######
 FROM alpine:latest
 
 RUN apk --no-cache add ca-certificates
 
-WORKDIR /blogbe/
+WORKDIR /blogbe
 
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
@@ -30,4 +31,4 @@ RUN chmod +x ./main
 EXPOSE 4000
 
 # Command to run the executable
-CMD ["./main"]
+ENTRYPOINT ["./main"]

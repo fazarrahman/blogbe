@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/fazarrahman/blogbe/auth"
 	dbcfg "github.com/fazarrahman/blogbe/config/mongodb"
@@ -32,6 +33,10 @@ func main() {
 
 	g := gin.Default()
 	g.Use(corsInit())
+	g.GET("/ping",
+		func(c *gin.Context) {
+			c.JSON(http.StatusOK, "pong")
+		})
 	delivery_rest.New(svc).Register(g.Group("/api"))
 	auth_rest.New(svc).Register(g.Group("/api/auth"))
 

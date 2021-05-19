@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blogbe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blogbe
+  template:
+    metadata:
+      labels:
+        app: blogbe
+    spec:
+      containers:
+      - name: blogbe-container
+        image: fazarrahman/blogbe
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 4000
