@@ -4,6 +4,8 @@ metadata:
   name: blogbe-svc
   labels:
     app: blogbe
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
 spec:
   type: LoadBalancer
   ports:
