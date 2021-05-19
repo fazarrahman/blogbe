@@ -1,3 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: blogbe-svc
+  labels:
+    app: blogbe
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 4000
+  selector:
+    app: blogbe
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
