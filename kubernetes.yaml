@@ -32,6 +32,27 @@ spec:
         image: fazarrahman/blogbe
         image: docker.io/fazarrahman/blogbe:latest
         imagePullPolicy: Always
+        env:
+          - name: AUTH_CLIENT_ID
+            value: 000000
+          - name: AUTH_SECRET
+            value: 999999
+          - name: AUTH_CLIENT_ID
+            value: 000000
+          - name: APP_DOMAIN
+            value: http://localhost
+          - name: APP_PORT
+            value: 4000
+          - name: DB_USERNAME
+            value: admin
+          - name: DB_PASSWORD
+            value: password
+          - name: DB_HOST
+            value: mongodb-standalone-0.database:27017
+          - name: DB_PORT
+            value: 27017
+          - name: DB_NAME
+            value: myblog
         resources:
           limits:
             memory: "128Mi"

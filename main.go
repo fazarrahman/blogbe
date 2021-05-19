@@ -40,7 +40,7 @@ func main() {
 	delivery_rest.New(svc).Register(g.Group("/api"))
 	auth_rest.New(svc).Register(g.Group("/api/auth"))
 
-	g.Run(lib.GetEnv("APP_PORT"))
+	g.Run(":" + lib.GetEnv("APP_PORT"))
 }
 
 func envInit() {
