@@ -23,6 +23,7 @@ func New(_svc *service.Svc) *Rest {
 // Register ...
 func (r *Rest) Register(g *gin.RouterGroup) {
 	g.GET("/profile", d.MustAuthorize(), r.GetUser)
+	g.GET("/galleries", r.GetGallery)
 
 }
 
@@ -42,10 +43,10 @@ func (r *Rest) GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, u)
 }
 
-/*func (r *Rest) GetUsers(c *gin.Context) {
-	users, err := r.Svc.GetUsers(c, bson.M{})
+func (r *Rest) GetGallery(c *gin.Context) {
+	users, err := r.Svc.GetGalleries(c)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		c.JSON(err.StatusCode, err)
 	}
 	c.JSON(http.StatusOK, users)
-}*/
+}

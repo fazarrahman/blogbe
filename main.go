@@ -5,10 +5,11 @@ import (
 	"net/http"
 
 	"github.com/fazarrahman/blogbe/auth"
-	dbcfg "github.com/fazarrahman/blogbe/config/mongodb"
+	mysqldb "github.com/fazarrahman/blogbe/config/mysqldb"
 	auth_rest "github.com/fazarrahman/blogbe/delivery/authRest"
 	delivery_rest "github.com/fazarrahman/blogbe/delivery/rest"
-	user_db_repo "github.com/fazarrahman/blogbe/domain/user/repository/mongodb"
+	gallery_db_repo "github.com/fazarrahman/blogbe/domain/gallery/repository/mysqldb"
+	user_db_repo "github.com/fazarrahman/blogbe/domain/user/repository/mysqldb"
 	"github.com/fazarrahman/blogbe/lib"
 	"github.com/fazarrahman/blogbe/service"
 
@@ -19,7 +20,7 @@ import (
 func main() {
 	envInit()
 
-	db, err := dbcfg.New()
+	db, err := mysqldb.New()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -29,7 +30,8 @@ func main() {
 	log.Println("Oauth has been initialized")
 
 	userDb := user_db_repo.New(db)
-	svc := service.New(userDb)
+	galleryDb := gallery_db_repo.New(db)
+	svc := service.New(userDb, galleryDb)
 
 	g := gin.Default()
 	g.Use(corsInit())

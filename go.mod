@@ -5,6 +5,8 @@ go 1.15
 require (
 	github.com/gin-gonic/gin v1.7.1
 	github.com/go-oauth2/gin-server v1.0.0
+	github.com/go-sql-driver/mysql v1.6.0
+	github.com/jmoiron/sqlx v1.3.5
 	github.com/joho/godotenv v1.3.0
 	github.com/ulule/deepcopier v0.0.0-20200430083143-45decc6639b6
 	go.mongodb.org/mongo-driver v1.5.2
