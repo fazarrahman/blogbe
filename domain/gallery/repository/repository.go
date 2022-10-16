@@ -8,4 +8,5 @@ import (
 
 type Repository interface {
 	GetGallery(ctx context.Context) ([]*entity.Gallery, error)
+	AddGallery(ctx context.Context, source string)
 }

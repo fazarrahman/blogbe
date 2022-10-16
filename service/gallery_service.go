@@ -13,3 +13,12 @@ func (s *Svc) GetGalleries(ctx *gin.Context) ([]*galEnt.Gallery, *error.Error) {
 	}
 	return galleries, nil
 }
+
+func (s *Svc) AddGalleries(ctx *gin.Context, source string) *error.Error {
+	if source == "" {
+		return error.BadRequest("File name is empty")
+	}
+
+	s.GalleryRepository.AddGallery(ctx, source)
+	return nil
+}

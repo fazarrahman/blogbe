@@ -2,6 +2,7 @@ package mysqldb
 
 import (
 	"context"
+	"time"
 
 	"github.com/fazarrahman/blogbe/domain/gallery/entity"
 	"github.com/jmoiron/sqlx"
@@ -24,4 +25,10 @@ func (m *Mysqldb) GetGallery(ctx context.Context) ([]*entity.Gallery, error) {
 		return nil, err
 	}
 	return galleries, err
+}
+
+func (m *Mysqldb) AddGallery(ctx context.Context, source string) {
+	_ = m.db.MustExecContext(ctx,
+		`insert into gallery (source, is_active, created_at, created_by)
+		values (?, ?, ?, ?)`, "images/"+source, 1, time.Now(), "admin")
 }

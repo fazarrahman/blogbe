@@ -28,4 +28,5 @@ type Service interface {
 	InsertUser(c *gin.Context, r *model.User) *error.Error
 	CheckUsernamePassword(ctx *gin.Context, r *UserPasswordCheckRequest) (*bool, *error.Error)
 	GetGalleries(ctx *gin.Context) ([]*galEnt.Gallery, *error.Error)
+	AddGalleries(ctx *gin.Context, source string) *error.Error
 }
