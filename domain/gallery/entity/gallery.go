@@ -1,6 +1,6 @@
 package entity
 
 type Gallery struct {
-	Id     string `db:"id"`
+	Id     int64 `db:"id"`
 	Source string `db:"source"`
 }
